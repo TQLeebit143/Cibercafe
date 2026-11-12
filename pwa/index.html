@@ -143,7 +143,7 @@
 
     </main>
 
-    <!-- DOCK DE NAVEGACIÓN INFERIOR -->
+  <!-- DOCK DE NAVEGACIÓN INFERIOR -->
     <nav class="pwa-bottom-nav">
       <button class="nav-item activo" onclick="cambiarVistaPwa('vista-lobby-pwa')">🏠<br>Lobby</button>
       <button class="nav-item" onclick="cambiarVistaPwa('vista-reservas-pwa')">📌<br>Reservas</button>
@@ -151,6 +151,15 @@
       <button class="nav-item" onclick="cambiarVistaPwa('vista-orden-pwa')">🛒<br>Orden</button>
       <button class="nav-item" onclick="cambiarVistaPwa('vista-bitacoras-pwa')">📜<br>Bitácora</button>
     </nav>
+  </div>
+
+  <!-- MODAL VISOR DE IMAGEN EN ALTA CALIDAD (DEBE IR AQUÍ ADENTRO) -->
+  <div id="modal-imagen" class="modal-imagen-overlay" style="display: none;">
+    <div class="modal-imagen-contenido">
+      <button class="btn-cerrar-modal" onclick="$('#modal-imagen').fadeOut('fast')">✕</button>
+      <img id="img-modal-zoom" src="" alt="Vista previa en alta resolución">
+      <p id="titulo-modal-zoom" style="margin-top: 8px; font-weight: bold; color: var(--accent); text-align: center; font-size: 0.9rem;"></p>
+    </div>
   </div>
 
   <script src="script.js"></script>

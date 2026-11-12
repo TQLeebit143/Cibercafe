@@ -1,4 +1,3 @@
-// Catálogo enfocado estrictamente en Cafetería y Snacks para el menú móvil
 const catalogoGlobal = [
   { id: 5, nombre: "Espresso Doble", categoria: "cafeteria", detalle: "Grano de altura recién molido", precio: 10, imagen: "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=200&q=80" },
   { id: 6, nombre: "Café Americano", categoria: "cafeteria", detalle: "Taza 12oz • Caliente", precio: 12, imagen: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&q=80" },
@@ -35,10 +34,10 @@ function renderizarCatalogoPwa(lista) {
 
   let html = '';
   lista.forEach(item => {
-    // Uso obligatorio de loading="lazy" según guía técnica del PDF
+  
     html += `
       <article class="tarjeta-item-pwa" data-id="${item.id}">
-        <img src="${item.imagen}" alt="${item.nombre}" loading="lazy" width="56" height="56">
+        <img src="${item.imagen}" alt="${item.nombre}" class="img-catalogo-clic" loading="lazy" width="56" height="56">
         <div class="info-item-pwa">
           <h4>${item.nombre}</h4>
           <p>${item.detalle}</p>
@@ -117,7 +116,6 @@ $(document).ready(function() {
       .catch(err => logPwa('Error SW: ' + err));
   }
 
-  // Delegación de eventos con .off().on() exigida por la guía técnica
   $('#contenedor-catalogo-pwa').off('click', '.btn-agregar-pwa').on('click', '.btn-agregar-pwa', function() {
     const id = $(this).closest('.tarjeta-item-pwa').data('id');
     const producto = catalogoGlobal.find(p => p.id === id);
@@ -188,5 +186,16 @@ $(document).ready(function() {
     ordenPwa = [];
     actualizarOrdenPwa();
     cambiarVistaPwa('vista-lobby-pwa');
+  });
+
+  $(document).on('click', '.img-catalogo-clic', function() {
+    const srcOriginal = $(this).attr('src');
+    const titulo = $(this).closest('.tarjeta-item-pwa').find('h4').text();
+    const srcAlta = srcOriginal.replace('w=200', 'w=1200');
+
+    $('#img-modal-zoom').attr('src', srcAlta);
+    $('#titulo-modal-zoom').text(titulo);
+    $('#modal-imagen').fadeIn('fast');
+    logPwa(`Abriendo zoom de imagen: ${titulo}`);
   });
 });
