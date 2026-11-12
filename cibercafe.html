@@ -6,6 +6,11 @@
   <title>CYBER ARENA</title>
   <link rel="stylesheet" href="estilos.css">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script>
+  if (window.innerWidth <= 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    window.location.replace("./pwa/index.html");
+  }
+</script>
 </head>
 <body class="vista-bg-1">
 

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050508">
+  <title>CYBER ARENA // Versión Móvil</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="estilos.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+
+  <div id="toast-pwa" class="toast-oculto"></div>
+
+  <div id="app-container-pwa">
+    <!-- HEADER MÓVIL CON MENÚ HAMBURGUESA -->
+    <header class="pwa-header">
+      <div class="pwa-brand">
+        <button id="btnHambPwa" class="hamburguesa-btn">☰</button>
+        <div>
+          <h1>CYBER ARENA ⚡</h1>
+          <small>● Modo App Móvil</small>
+        </div>
+      </div>
+      <div class="pwa-controls">
+        <span class="pill-total"><strong id="pwa-total">0</strong> BOB</span>
+        <button id="btn-tema-pwa" class="btn-icon">🌙</button>
+      </div>
+
+      <!-- MENÚ DESPLEGABLE HAMBURGUESA -->
+      <nav id="menuDesplegablePwa" class="menu-desplegable-oculto">
+        <a href="#" onclick="cambiarVistaPwa('vista-lobby-pwa'); cerrarHamb();">🏠 Lobby Principal</a>
+        <a href="#" onclick="cambiarVistaPwa('vista-reservas-pwa'); cerrarHamb();">📌 Zonas & Reservas</a>
+        <a href="#" onclick="cambiarVistaPwa('vista-cafeteria-pwa'); cerrarHamb();">🍔 Cafetería & Menú</a>
+        <a href="#" onclick="cambiarVistaPwa('vista-cuenta-pwa'); cerrarHamb();">🔍 Estado de Cuenta</a>
+        <a href="#" onclick="cambiarVistaPwa('vista-bitacoras-pwa'); cerrarHamb();">📜 Monitor de Bitácoras</a>
+      </nav>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="pwa-main-content">
+
+      <!-- 1. LOBBY PRINCIPAL -->
+      <section id="vista-lobby-pwa" class="vista-pwa activa">
+        <div class="card-seccion">
+          <h3>🚀 Panel de Control Móvil</h3>
+          <p>Bienvenido al centro de operaciones. Usa los accesos rápidos para gestionar reservas o pedir a cafetería.</p>
+          <div class="botones-rapidos-grid">
+            <button class="btn-accion-pwa" onclick="cambiarVistaPwa('vista-reservas-pwa')">📌 Reservar Estación</button>
+            <button class="btn-accion-pwa" onclick="cambiarVistaPwa('vista-cafeteria-pwa')">🍔 Menú Cafetería</button>
+            <button class="btn-accion-pwa" onclick="cambiarVistaPwa('vista-cuenta-pwa')">🔍 Estado de Cuenta</button>
+            <button class="btn-accion-pwa" onclick="cambiarVistaPwa('vista-bitacoras-pwa')">📜 Bitácoras</button>
+          </div>
+        </div>
+        <div class="card-seccion" style="margin-top: 10px;">
+          <h3>🛒 Inventario Rápido</h3>
+          <ul id="lista-carrito-lobby-pwa" class="lista-mini-carrito">
+            <li class="vacio">Sin reservas ni snacks activos.</li>
+          </ul>
+          <button class="btn-primario" onclick="cambiarVistaPwa('vista-orden-pwa')">Ver Orden Completa y Pagar</button>
+        </div>
+      </section>
+
+      <!-- 2. GESTIÓN DE RESERVAS Y ESTACIONES -->
+      <section id="vista-reservas-pwa" class="vista-pwa" style="display: none;">
+        <div class="card-seccion">
+          <h3>📌 Reservar Estación (PC / Consolas / Mesas)</h3>
+          <form id="form-reserva-pwa">
+            <label>Nombre del Jugador:</label>
+            <input type="text" id="nombreClientePwa" placeholder="Ej: Genesis Alejandra" class="input-pwa" required>
+            
+            <label>Zona o Estación:</label>
+            <select id="areaReservaPwa" class="input-pwa">
+              <option value="Cabinas PC Gamer Pro">Cabinas PC Gamer Pro (10 BOB/h)</option>
+              <option value="Salas VIP Consolas (PS5)">Salas VIP Consolas (18 BOB/h)</option>
+              <option value="Salas Normales Consolas (PS4/PS3)">Salas Normales Consolas (12 BOB/h)</option>
+              <option value="Mesas Co-Working & Café">Mesas Co-Working & Café (12 BOB/h)</option>
+            </select>
+
+            <label>Horas:</label>
+            <input type="number" id="horasReservaPwa" class="input-pwa" step="0.5" min="0.5" max="10" value="1" required>
+
+            <button type="submit" class="btn-primario">Confirmar y Asignar Estación</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- 3. CAFETERÍA Y MENÚ (Asíncrono con Fetch + Lazy Loading) -->
+      <section id="vista-cafeteria-pwa" class="vista-pwa" style="display: none;">
+        <div class="card-seccion">
+          <h3>🍔 Menú "Sol Café" (Servicio a Estación)</h3>
+          <div class="buscador-box">
+            <input type="text" id="buscar-pwa" placeholder="🔍 Buscar café, sándwich, postre..." class="input-pwa">
+          </div>
+          <div class="filtros-scroll">
+            <button class="chip-filtro activo" data-cat="todos">Todos</button>
+            <button class="chip-filtro" data-cat="cafeteria">☕ Cafés</button>
+            <button class="chip-filtro" data-cat="snacks">🥪 Sándwiches & Snacks</button>
+          </div>
+          <!-- Contenedor cargado mediante Fetch y Lazy Loading -->
+          <div id="contenedor-catalogo-pwa" class="lista-tarjetas-catalogo"></div>
+        </div>
+      </section>
+
+      <!-- 4. ESTADO DE CUENTA -->
+      <section id="vista-cuenta-pwa" class="vista-pwa" style="display: none;">
+        <div class="card-seccion">
+          <h3>🔍 Estado de Cuenta & Liberación</h3>
+          <label>Cliente o Código de Estación:</label>
+          <input type="text" id="inputBusquedaCuentaPwa" placeholder="Ej: PC-01" class="input-pwa">
+          <button class="btn-primario" onclick="consultarCuentaPwa()">Buscar Cuenta</button>
+          <div id="resultadoCuentaPwa" class="consola-pwa" style="margin-top: 10px; height: 120px;"></div>
+        </div>
+      </section>
+
+      <!-- 5. BITÁCORAS -->
+      <section id="vista-bitacoras-pwa" class="vista-pwa" style="display: none;">
+        <div class="card-seccion">
+          <h3>📜 Monitor de Bitácoras</h3>
+          <div id="log-pwa" class="consola-pwa">
+            <div>[PWA] Sistema móvil inicializado correctamente.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. ORDEN Y CHECKOUT -->
+      <section id="vista-orden-pwa" class="vista-pwa" style="display: none;">
+        <div class="card-seccion">
+          <h3>🛒 Tu Orden Activa</h3>
+          <ul id="lista-orden-pwa" class="orden-lista-pwa">
+            <li class="vacio">Sin ítems en la orden.</li>
+          </ul>
+          <div class="resumen-pago-pwa">
+            <div class="fila-total">
+              <span>Total a Pagar:</span>
+              <strong id="orden-subtotal-pwa">0 BOB</strong>
+            </div>
+            <button id="btn-confirmar-pwa" class="btn-primario">CONFIRMAR Y PAGAR</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- DOCK DE NAVEGACIÓN INFERIOR -->
+    <nav class="pwa-bottom-nav">
+      <button class="nav-item activo" onclick="cambiarVistaPwa('vista-lobby-pwa')">🏠<br>Lobby</button>
+      <button class="nav-item" onclick="cambiarVistaPwa('vista-reservas-pwa')">📌<br>Reservas</button>
+      <button class="nav-item" onclick="cambiarVistaPwa('vista-cafeteria-pwa')">🍔<br>Menú</button>
+      <button class="nav-item" onclick="cambiarVistaPwa('vista-orden-pwa')">🛒<br>Orden</button>
+      <button class="nav-item" onclick="cambiarVistaPwa('vista-bitacoras-pwa')">📜<br>Bitácora</button>
+    </nav>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
