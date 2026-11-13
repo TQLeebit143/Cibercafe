@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cyber-arena-pwa-v2';
+const CACHE_NAME = 'cyber-arena-pwa-v3';
 const ASSETS = [
   './index.html',
   './estilos.css',

@@ -10,6 +10,18 @@
   --border: rgba(255, 255, 255, 0.18);
 }
 
+body.light-mode {
+  --bg: #f1f5f9;
+  --surface: rgba(255, 255, 255, 0.92);
+  --surface-alt: rgba(226, 232, 240, 0.85);
+  --text: #0f172a;
+  --text-muted: #475569;
+  --accent: #0284c7;
+  --neon-green: #059669;
+  --pink: #e11d48;
+  --border: rgba(15, 23, 42, 0.15);
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
@@ -55,7 +67,7 @@ body {
 
 .pwa-controls { display: flex; align-items: center; gap: 8px; }
 .pill-total { background: var(--surface-alt); border: 1px solid #ffcc00; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; }
-.btn-icon { background: var(--accent); border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; }
+.btn-icon { background: var(--accent); border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
 .menu-desplegable-oculto {
   display: none;
@@ -92,6 +104,7 @@ body {
   background: rgba(0, 240, 255, 0.15); 
   color: var(--accent); 
 }
+
 .pwa-main-content { flex: 1; padding: 12px; }
 
 .card-seccion { 
@@ -147,6 +160,7 @@ body {
 
 #toast-pwa { position: fixed; top: 60px; left: 50%; transform: translateX(-50%); background: var(--surface); border: 1px solid var(--accent); color: var(--text); padding: 6px 14px; border-radius: 15px; font-size: 0.75rem; z-index: 2000; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: none; }
 
+/* ESTILOS PARA EL MODAL DE ZOOM DE IMAGEN */
 .img-catalogo-clic {
   cursor: pointer;
   transition: transform 0.2s;

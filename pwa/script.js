@@ -34,7 +34,6 @@ function renderizarCatalogoPwa(lista) {
 
   let html = '';
   lista.forEach(item => {
-  
     html += `
       <article class="tarjeta-item-pwa" data-id="${item.id}">
         <img src="${item.imagen}" alt="${item.nombre}" class="img-catalogo-clic" loading="lazy" width="56" height="56">
@@ -151,26 +150,29 @@ $(document).ready(function() {
     renderizarCatalogoPwa(filtrados);
   });
 
-  $('#btn-tema-pwa').on('click', function() {
+  $('#btn-tema-pwa').off('click').on('click', function() {
     $('body').toggleClass('light-mode');
-    const claro = $('body').hasClass('light-mode');
-    $(this).text(claro ? '☀️' : '🌙');
-    logPwa(`Tema cambiado a ${claro ? 'Claro' : 'Oscuro'}`);
+    const esClaro = $('body').hasClass('light-mode');
+    $(this).text(esClaro ? '☀️' : '🌙');
+    logPwa(`Tema cambiado a ${esClaro ? 'Claro (Día)' : 'Oscuro (Noche)'}`);
   });
 
   $('#form-reserva-pwa').on('submit', function(e) {
     e.preventDefault();
-    const cliente = $('#nombreClientePwa').val();
-    const area = $('#areaReservaPwa').val();
-    const horas = $('#horasReservaPwa').val();
+    let clienteCrudo = $('#nombreClientePwa').val().trim();
+    let area = $('#areaReservaPwa').val();
+    let horas = $('#horasReservaPwa').val();
     
+    if (!clienteCrudo) return;
+
     let precioEstacion = area.includes('PC') ? 10 : (area.includes('VIP') ? 18 : 12);
     let totalEstacion = precioEstacion * horas;
 
     ordenPwa.push({ nombre: `Reserva ${area} (${horas}h)`, precio: totalEstacion });
     actualizarOrdenPwa();
-    toastPwa(`Estación asignada a ${cliente}`);
-    logPwa(`Reserva creada para ${cliente} en ${area} (${totalEstacion} BOB)`);
+    
+    toastPwa(`Estación asignada`);
+    logPwa(`Reserva creada para estación ${area} (${totalEstacion} BOB)`);
     cambiarVistaPwa('vista-lobby-pwa');
     this.reset();
   });
@@ -188,7 +190,8 @@ $(document).ready(function() {
     cambiarVistaPwa('vista-lobby-pwa');
   });
 
-  $(document).on('click', '.img-catalogo-clic', function() {
+  $(document).on('click', '.img-catalogo-clic', function(e) {
+    e.preventDefault();
     const srcOriginal = $(this).attr('src');
     const titulo = $(this).closest('.tarjeta-item-pwa').find('h4').text();
     const srcAlta = srcOriginal.replace('w=200', 'w=1200');
