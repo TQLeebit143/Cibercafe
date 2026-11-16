@@ -6,6 +6,26 @@
   <meta name="description" content="Cyber Arena — Gaming Lounge & Café. Reserva estaciones, pide cafetería y gestiona tu cuenta.">
   <meta name="theme-color" content="#050508">
   <title>CYBER ARENA — Gaming Lounge &amp; Café</title>
+
+  <!-- Enrutado por dispositivo: en celular/tablet se abre la PWA; en laptop se queda esta versión. -->
+  <script>
+    (function () {
+      var ua = navigator.userAgent || '';
+      var esMovil = /Android|iPhone|iPad|iPod|Windows Phone|IEMobile|Opera Mini|webOS|BlackBerry/i.test(ua)
+        || (navigator.maxTouchPoints > 1 && /Macintosh/.test(ua));
+      var preferida = '';
+      try {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('v') === 'escritorio') {
+          sessionStorage.setItem('vista', 'escritorio');
+        }
+        preferida = sessionStorage.getItem('vista') || '';
+      } catch (error) {}
+      if (esMovil && preferida !== 'escritorio') {
+        window.location.replace('pwa/index.html');
+      }
+    })();
+  </script>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
   <link rel="stylesheet" href="shared/base.css">
@@ -44,6 +64,7 @@
       <div class="hud-actions">
         <span class="hud-pill">Items <b id="hudItems">0</b></span>
         <span class="hud-pill gold">Total <b id="hudTotal">0</b> BOB</span>
+        <a class="btn btn-icon btn-ghost" href="pwa/index.html" aria-label="Abrir la versión móvil (PWA)" title="Versión móvil (PWA)">📱</a>
         <button type="button" class="btn btn-icon btn-ghost" data-theme-toggle aria-label="Cambiar tema">
           <span class="theme-icon">☀️</span>
         </button>
