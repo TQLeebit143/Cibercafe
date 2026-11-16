@@ -1,0 +1,342 @@
+﻿<!DOCTYPE html>
+<html lang="es" data-default-theme="dark" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Cyber Arena — Gaming Lounge & Café. Reserva estaciones, pide cafetería y gestiona tu cuenta.">
+  <meta name="theme-color" content="#050508">
+  <title>CYBER ARENA — Gaming Lounge &amp; Café</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="stylesheet" href="shared/base.css">
+  <link rel="stylesheet" href="CSS/estilos.css">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('dw2-theme') || document.documentElement.dataset.defaultTheme || 'dark';
+        document.documentElement.dataset.theme = t;
+      } catch (e) { document.documentElement.dataset.theme = 'dark'; }
+    })();
+  </script>
+</head>
+<body class="ciber-site">
+
+  <div class="hud-shell">
+
+    <header class="hud-header">
+      <div class="hud-brand">
+        <img src="assets/icon.svg" alt="Cyber Arena" class="hud-logo">
+        <div class="hud-brand-text">
+          <strong>CYBER ARENA <span>⚡</span></strong>
+          <small>Gaming Lounge &amp; Café</small>
+        </div>
+        <span class="zone-pill">Zona: <b id="hudZona">Lobby Principal</b></span>
+      </div>
+
+      <div class="hud-player">
+        <span id="hudAvatar" class="hud-avatar">VIP</span>
+        <div>
+          <strong id="hudJugador">Cliente: Invitado</strong>
+          <small id="hudEstado" class="hud-online">● En línea</small>
+        </div>
+      </div>
+
+      <div class="hud-actions">
+        <span class="hud-pill">Items <b id="hudItems">0</b></span>
+        <span class="hud-pill gold">Total <b id="hudTotal">0</b> BOB</span>
+        <button type="button" class="btn btn-icon btn-ghost" data-theme-toggle aria-label="Cambiar tema">
+          <span class="theme-icon">☀️</span>
+        </button>
+        <button type="button" id="ciberCuentaBtn" class="btn btn-primary btn-sm" data-open-modal="ciberCuentaModal">🔒 Admin</button>
+      </div>
+    </header>
+
+    <main class="hud-main">
+
+      <section id="vista-lobby" class="hud-view active" data-title="Lobby Principal">
+        <div class="lobby-grid">
+          <div class="hud-panel">
+            <h3>🔍 Radar de búsqueda</h3>
+            <input id="radarBusqueda" class="input" type="search" placeholder="Buscar PC, consola, café…" autocomplete="off">
+            <div id="radarResultados" class="radar-results"></div>
+
+            <h3 class="mt-2">🚀 Accesos rápidos</h3>
+            <div class="quick-stack">
+              <button type="button" class="btn btn-ghost btn-block" data-view="vista-reservas">📌 Zonas &amp; reservas</button>
+              <button type="button" class="btn btn-ghost btn-block" data-view="vista-cafeteria">🍔 Cafetería &amp; menú</button>
+              <button type="button" class="btn btn-ghost btn-block" data-view="vista-cuenta">💳 Estado de cuenta</button>
+              <button type="button" class="btn btn-soft btn-block admin-only" data-view="vista-bitacoras">📜 Monitor de bitácoras</button>
+            </div>
+          </div>
+
+          <div class="hud-panel">
+            <h3>🖥️ Panel de control central</h3>
+            <p class="muted small">Bienvenido al centro de operaciones de Cyber Arena. Reserva estaciones, pide cafetería y revisa tu cuenta desde un solo lugar.</p>
+
+            <div class="status-banner">
+              <strong>Estado general del servidor</strong>
+              <span>Red co-working: 100% estable · Latencia: 4 ms · Conexión segura</span>
+            </div>
+
+            <form id="gamertagForm" class="gamertag-box" autocomplete="off">
+              <label for="gamertagInput">Tu gamertag / nombre de jugador</label>
+              <div class="row">
+                <input id="gamertagInput" class="input" type="text" maxlength="32" placeholder="Ej: Kael99">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+              </div>
+            </form>
+
+            <div class="hud-kpis kpi-grid">
+              <div class="kpi"><span class="kpi-label">Estaciones activas</span><strong class="kpi-value" id="lobbySesiones">0</strong><span class="kpi-hint">en este momento</span></div>
+              <div class="kpi"><span class="kpi-label">Consumos</span><strong class="kpi-value" id="lobbyConsumos">0</strong><span class="kpi-hint">snacks y bebidas</span></div>
+              <div class="kpi"><span class="kpi-label">Total abierto</span><strong class="kpi-value" id="lobbyTotal">0 BOB</strong><span class="kpi-hint">por cobrar</span></div>
+            </div>
+          </div>
+
+          <div class="hud-panel panel-order">
+            <div class="row-between">
+              <h3>🛒 Inventario de orden</h3>
+              <span class="badge info" id="ordenBadge">0 ítems</span>
+            </div>
+            <ul id="lobbyOrden" class="order-list"></ul>
+            <div class="order-total"><span>TOTAL</span><strong id="lobbyTotalOrden">0 BOB</strong></div>
+            <button type="button" class="btn btn-primary btn-block" id="btnCheckoutLobby">CONFIRMAR Y PAGAR</button>
+            <button type="button" class="btn btn-ghost btn-block mt-1" data-view="vista-cuenta">Consultar cuenta</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="vista-reservas" class="hud-view" data-title="Zonas y Reservas">
+        <div class="view-head">
+          <div>
+            <span class="view-kicker">Reservas</span>
+            <h2>Gestión de zonas, mapa y estaciones</h2>
+          </div>
+          <button type="button" class="btn btn-ghost btn-sm" data-view="vista-lobby">⬅ Volver al lobby</button>
+        </div>
+
+        <div class="reservas-grid">
+          <div class="hud-panel">
+            <h3>🎮 Selecciona tu estación</h3>
+            <div id="zonasGrid" class="zonas-grid"></div>
+
+            <h3 class="mt-2">Formulario de reserva inmediata</h3>
+            <form id="reservaForm" class="stack" novalidate>
+              <div class="field">
+                <label for="reservaNombre">Nombre del jugador *</label>
+                <input id="reservaNombre" class="input" type="text" maxlength="32" placeholder="Ej: ShadowGamer">
+              </div>
+              <div class="field">
+                <label for="reservaZona">Zona / estación *</label>
+                <select id="reservaZona" class="select"></select>
+              </div>
+              <div class="field">
+                <label for="reservaHoras">Horas a jugar *</label>
+                <select id="reservaHoras" class="select">
+                  <option value="1">1 hora</option>
+                  <option value="2">2 horas</option>
+                  <option value="3">3 horas</option>
+                  <option value="4">4 horas</option>
+                  <option value="5">5 horas (promo gamer)</option>
+                </select>
+              </div>
+              <p id="reservaError" class="form-error" role="alert"></p>
+              <button type="submit" class="btn btn-primary btn-block">Asignar estación y sumar a la orden</button>
+            </form>
+          </div>
+
+          <div class="hud-panel">
+            <h3>🗺️ Mapa de estaciones</h3>
+            <div id="mapaEstaciones" class="mapa-grid"></div>
+            <h3 class="mt-2">Sesiones activas</h3>
+            <ul id="sesionesActivas" class="session-list"></ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="vista-cafeteria" class="hud-view" data-title="Cafetería & Menú">
+        <div class="view-head">
+          <div>
+            <span class="view-kicker">Cafetería</span>
+            <h2>Menú gamer &amp; snacks en vivo</h2>
+          </div>
+          <button type="button" class="btn btn-ghost btn-sm" data-view="vista-lobby">⬅ Volver al lobby</button>
+        </div>
+
+        <div class="cafeteria-toolbar hud-panel">
+          <div class="field grow">
+            <label for="menuBusqueda">Buscar en el menú</label>
+            <input id="menuBusqueda" class="input" type="search" placeholder="🔍 Café, sándwich, postre…" autocomplete="off">
+          </div>
+          <div class="field grow">
+            <label for="menuEstacion">Cargar consumo a</label>
+            <select id="menuEstacion" class="select"></select>
+          </div>
+        </div>
+
+        <div id="menuFiltros" class="chips menu-chips" role="group" aria-label="Filtros del menú"></div>
+        <p id="menuResultInfo" class="menu-result-info"></p>
+
+        <div class="cafeteria-layout">
+          <div id="menuGrid" class="menu-grid"></div>
+          <aside class="hud-panel cafeteria-order">
+            <div class="row-between">
+              <h3>🧾 Orden actual</h3>
+              <span class="badge info" id="cafeteriaBadge">0</span>
+            </div>
+            <ul id="cafeteriaOrden" class="order-list"></ul>
+            <div class="order-total"><span>TOTAL</span><strong id="cafeteriaTotal">0 BOB</strong></div>
+            <button type="button" class="btn btn-primary btn-block" id="btnCheckoutCafeteria">CONFIRMAR Y PAGAR</button>
+          </aside>
+        </div>
+      </section>
+
+      <section id="vista-cuenta" class="hud-view" data-title="Estado de Cuenta">
+        <div class="view-head">
+          <div>
+            <span class="view-kicker">Cuenta</span>
+            <h2>Estado de cuenta &amp; liberación de estación</h2>
+          </div>
+          <button type="button" class="btn btn-ghost btn-sm" data-view="vista-lobby">⬅ Volver al lobby</button>
+        </div>
+
+        <div class="cuenta-grid">
+          <div class="hud-panel">
+            <h3>🔍 Consultar cuenta activa</h3>
+            <label for="cuentaBusqueda" class="label">Cliente o código de estación</label>
+            <div class="row mt-1">
+              <input id="cuentaBusqueda" class="input" type="search" placeholder="Ej: Genesis o PC-01">
+              <button type="button" id="cuentaBuscarBtn" class="btn btn-primary">Buscar</button>
+            </div>
+            <div id="cuentaResultado" class="log-box mt-2"></div>
+          </div>
+
+          <div class="hud-panel admin-only">
+            <h3>❌ Liberar / suspender estación</h3>
+            <p class="muted small">Acción exclusiva del personal. Finaliza la sesión, cobra consumos y libera el equipo.</p>
+            <label for="liberarEstacion" class="label">Selecciona el equipo</label>
+            <select id="liberarEstacion" class="select mt-1"></select>
+            <button type="button" id="liberarBtn" class="btn btn-danger btn-block mt-2">Liberar y finalizar sesión</button>
+          </div>
+
+          <div class="hud-panel full">
+            <h3>📋 Todas las sesiones activas</h3>
+            <div id="cuentaSesiones" class="session-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="vista-bitacoras" class="hud-view admin-only" data-title="Monitor de Bitácoras">
+        <div class="view-head">
+          <div>
+            <span class="view-kicker">Administración</span>
+            <h2>Monitor de registros y bitácoras</h2>
+          </div>
+          <div class="row">
+            <button type="button" class="btn btn-ghost btn-sm" id="ciberRefreshLogs">↻ Actualizar</button>
+            <button type="button" class="btn btn-danger btn-sm" id="ciberClearLogs">🗑️ Limpiar</button>
+            <button type="button" class="btn btn-ghost btn-sm" data-view="vista-lobby">⬅ Lobby</button>
+          </div>
+        </div>
+
+        <div class="hud-kpis kpi-grid mt-1">
+          <div class="kpi"><span class="kpi-label">Ventas</span><strong class="kpi-value" id="ciberKpiVentas">0 BOB</strong><span class="kpi-hint">caja acumulada</span></div>
+          <div class="kpi"><span class="kpi-label">Eventos</span><strong class="kpi-value" id="ciberKpiEventos">0</strong><span class="kpi-hint">acciones registradas</span></div>
+          <div class="kpi"><span class="kpi-label">Sesiones</span><strong class="kpi-value" id="ciberKpiSesiones">0</strong><span class="kpi-hint">estaciones activas</span></div>
+          <div class="kpi"><span class="kpi-label">Ticket promedio</span><strong class="kpi-value" id="ciberKpiTicket">0 BOB</strong><span class="kpi-hint">por venta</span></div>
+        </div>
+
+        <div class="bitacoras-grid">
+          <div class="hud-panel">
+            <h3>📜 Bitácora de eventos y navegación</h3>
+            <div id="ciberLogEventos" class="log-box" aria-live="polite"></div>
+          </div>
+          <div class="hud-panel">
+            <h3>💰 Bitácora de ventas y transacciones</h3>
+            <div id="ciberLogVentas" class="log-box" aria-live="polite"></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <nav class="hud-dock" aria-label="Navegación principal">
+      <button type="button" class="dock-btn active" data-view="vista-lobby">🏠 <span>Lobby</span></button>
+      <button type="button" class="dock-btn" data-view="vista-reservas">📌 <span>Reservas</span></button>
+      <button type="button" class="dock-btn" data-view="vista-cafeteria">🍔 <span>Cafetería</span></button>
+      <button type="button" class="dock-btn" data-view="vista-cuenta">💳 <span>Cuenta</span></button>
+      <button type="button" class="dock-btn admin-only" id="dockBitacoras" data-view="vista-bitacoras">📜 <span>Bitácoras</span></button>
+    </nav>
+  </div>
+
+  <div id="checkoutModal" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+      <div class="modal-head">
+        <div>
+          <h3 id="checkoutTitle" class="modal-title">Checkout de pago</h3>
+          <p class="modal-sub">Revisa el detalle y confirma la transacción.</p>
+        </div>
+        <button type="button" class="modal-close" data-close-modal aria-label="Cerrar">✕</button>
+      </div>
+      <div id="checkoutResumen" class="checkout-resumen"></div>
+      <div class="order-total"><span>TOTAL A PAGAR</span><strong id="checkoutTotal">0 BOB</strong></div>
+      <div class="field mt-2">
+        <label for="checkoutCliente">Nombre del jugador / cliente *</label>
+        <input id="checkoutCliente" class="input" type="text" maxlength="40" placeholder="Nombre obligatorio para el ticket">
+      </div>
+      <p id="checkoutError" class="form-error" role="alert"></p>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-close-modal>Cancelar</button>
+        <button type="button" id="checkoutPagar" class="btn btn-primary">💳 Pagar y confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="ciberDetailModal" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <div>
+          <span id="ciberDetailCat" class="badge info">Detalle</span>
+          <h3 id="ciberDetailTitle" class="modal-title mt-1">Estación</h3>
+        </div>
+        <button type="button" class="modal-close" data-close-modal aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modal-media">
+        <img id="ciberDetailImg" src="" alt="Detalle" onerror="window.App&amp;&amp;App.imgFallback(this,'🎮','cyber')">
+      </div>
+      <p id="ciberDetailDesc" class="muted mt-1"></p>
+      <div class="order-total"><span>PRECIO</span><strong id="ciberDetailPrice">0 BOB</strong></div>
+      <button type="button" id="ciberDetailAction" class="btn btn-primary btn-block mt-2">Añadir</button>
+    </div>
+  </div>
+
+  <div id="ciberCuentaModal" class="modal" aria-hidden="true">
+    <div class="modal-card compact" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <div><h3 class="modal-title">Mi cuenta</h3><p class="modal-sub">Jugador o personal de caja.</p></div>
+        <button type="button" class="modal-close" data-close-modal aria-label="Cerrar">✕</button>
+      </div>
+      <form id="ciberClientForm" class="stack" autocomplete="off">
+        <div class="field">
+          <label for="ciberClientGamertag">Gamertag / alias</label>
+          <input id="ciberClientGamertag" class="input" type="text" maxlength="32" placeholder="Ej: Kael99">
+        </div>
+        <button type="submit" class="btn btn-accent btn-block">🎮 Guardar gamertag</button>
+      </form>
+      <hr class="divider">
+      <form id="ciberAdminForm" class="stack" autocomplete="off">
+        <div class="field"><label for="ciberAdminUser">Usuario</label><input id="ciberAdminUser" class="input" type="text" maxlength="30" placeholder="admin"></div>
+        <div class="field"><label for="ciberAdminPass">Contraseña</label><input id="ciberAdminPass" class="input" type="password" maxlength="40" placeholder="••••••••"></div>
+        <p id="ciberAdminError" class="form-error" role="alert"></p>
+        <button type="submit" class="btn btn-primary btn-block">🔐 Entrar como admin</button>
+        <p class="small muted">Práctica: <strong>admin / ciber123</strong> · <strong>cajero / arena2026</strong>.</p>
+      </form>
+      <button type="button" id="ciberAdminLogout" class="btn btn-danger btn-block hidden mt-1">🚪 Cerrar sesión admin</button>
+    </div>
+  </div>
+
+  <script src="shared/core.js"></script>
+  <script src="data/catalogo.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

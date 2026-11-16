@@ -1,0 +1,17 @@
+[
+  { "id": 1, "nombre": "Cabina PC Gamer Pro (1h)", "categoria": "estacion", "detalle": "RTX 4060 • Monitor 180Hz", "precio": 10, "imagen": "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=200&q=80" },
+  { "id": 2, "nombre": "Sala VIP PS5 / Series X (1h)", "categoria": "estacion", "detalle": "Pantalla 4K 65\" • DualSense", "precio": 18, "imagen": "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=200&q=80" },
+  { "id": 3, "nombre": "Sala Consola PS4 / PS3 (1h)", "categoria": "estacion", "detalle": "LED 43\" • Catálogo Clásico", "precio": 12, "imagen": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=200&q=80" },
+  { "id": 4, "nombre": "Mesa Co-Working & Café (1h)", "categoria": "estacion", "detalle": "Wi-Fi 6 • Enchufes múltiples", "precio": 12, "imagen": "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=200&q=80" },
+  { "id": 5, "nombre": "Espresso Doble", "categoria": "cafeteria", "detalle": "Grano de altura recién molido", "precio": 10, "imagen": "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=200&q=80" },
+  { "id": 6, "nombre": "Café Americano", "categoria": "cafeteria", "detalle": "Taza 12oz • Caliente", "precio": 12, "imagen": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&q=80" },
+  { "id": 7, "nombre": "Cappuccino Artesanal", "categoria": "cafeteria", "detalle": "Espuma cremosa y cacao", "precio": 15, "imagen": "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=200&q=80" },
+  { "id": 8, "nombre": "Latte / Macchiato", "categoria": "cafeteria", "detalle": "Leche vaporizada suave", "precio": 15, "imagen": "https://images.unsplash.com/photo-1561882468-9110e03e0f78?w=200&q=80" },
+  { "id": 9, "nombre": "Café Helado / Frappé", "categoria": "cafeteria", "detalle": "Crema batida y caramelo", "precio": 16, "imagen": "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=200&q=80" },
+  { "id": 10, "nombre": "Bebida Energética Monster", "categoria": "cafeteria", "detalle": "Lata 473ml • Ultra fría", "precio": 15, "imagen": "https://images.unsplash.com/photo-1622543925917-763c34d1a86e?w=200&q=80" },
+  { "id": 11, "nombre": "Pan con Chicharrón", "categoria": "snacks", "detalle": "Crocante con salsa criolla", "precio": 22, "imagen": "https://images.unsplash.com/photo-1509722747041-616f39b57569?w=200&q=80" },
+  { "id": 12, "nombre": "Sándwich Club Gamer", "categoria": "snacks", "detalle": "Triple piso con papas", "precio": 28, "imagen": "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=200&q=80" },
+  { "id": 13, "nombre": "Salchipapa Gamer", "categoria": "snacks", "detalle": "Porción XL + 4 salsas", "precio": 18, "imagen": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=200&q=80" },
+  { "id": 14, "nombre": "Brownie con Helado", "categoria": "snacks", "detalle": "Chocolate tibio + bola vainilla", "precio": 16, "imagen": "https://images.unsplash.com/photo-1564355808539-22fda35bed7e?w=200&q=80" },
+  { "id": 15, "nombre": "Cheesecake Frutos Rojos", "categoria": "snacks", "detalle": "Porción artesanal fría", "precio": 18, "imagen": "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=200&q=80" }
+]

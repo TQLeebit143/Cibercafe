@@ -1,34 +1,69 @@
-const CACHE_NAME = 'cyber-arena-pwa-v3';
+/* ============================================================
+   CYBER ARENA — Service Worker (PWA móvil)
+   Precache local y fallback de navegación a index.html.
+   ============================================================ */
+const CACHE = 'ciber-arena-pwa-v4';
+
 const ASSETS = [
+  './',
   './index.html',
+  './manifest.json',
   './estilos.css',
   './script.js',
-  './manifest.json'
+  '../data/catalogo.js',
+  '../assets/icon.svg',
+  '../assets/placeholder.svg',
+  '../../shared/base.css',
+  '../../shared/core.js'
 ];
 
-self.addEventListener('install', e => {
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE).then((cache) =>
+      Promise.allSettled(ASSETS.map((url) => cache.add(url).catch(() => null)))
+    )
+  );
   self.skipWaiting();
-  e.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
-  );
 });
 
-self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(
-        keys.map(key => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)))
+    )
+  );
+  self.clients.claim();
+});
+
+self.addEventListener('fetch', (event) => {
+  const request = event.request;
+  if (request.method !== 'GET') return;
+
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE).then((cache) => cache.put(request, copy)).catch(() => {});
+          return response;
         })
-      );
-    })
-  );
-});
+        .catch(() => caches.match('./index.html'))
+    );
+    return;
+  }
 
-self.addEventListener('fetch', e => {
-  e.respondWith(
-    caches.match(e.request).then(resp => resp || fetch(e.request))
+  event.respondWith(
+    caches.match(request).then((cached) => {
+      if (cached) return cached;
+      return fetch(request)
+        .then((response) => {
+          if (response && response.status === 200 && new URL(request.url).origin === self.location.origin) {
+            const copy = response.clone();
+            caches.open(CACHE).then((cache) => cache.put(request, copy)).catch(() => {});
+          }
+          return response;
+        })
+        .catch(() => new Response('', { status: 408 }));
+    })
   );
 });

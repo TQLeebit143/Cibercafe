@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Cyber Arena">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#08111a"/>
+      <stop offset="1" stop-color="#101f33"/>
+    </linearGradient>
+    <linearGradient id="neon" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#00f0ff"/>
+      <stop offset="1" stop-color="#39ff14"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+  <rect x="34" y="34" width="444" height="444" rx="70" fill="none" stroke="url(#neon)" stroke-width="6" opacity=".55"/>
+  <path d="M150 228h212c19 0 33 14 37 32l14 62c5 24-25 38-42 20l-30-32H171l-30 32c-17 18-47 4-42-20l14-62c4-18 18-32 37-32z" fill="none" stroke="url(#neon)" stroke-width="12" stroke-linejoin="round"/>
+  <circle cx="198" cy="264" r="10" fill="#ff007f"/>
+  <circle cx="232" cy="264" r="10" fill="#ffcc00"/>
+  <circle cx="302" cy="266" r="9" fill="#00f0ff"/>
+  <circle cx="334" cy="250" r="9" fill="#39ff14"/>
+  <text x="256" y="400" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="46" font-weight="800" fill="#e6fbff" letter-spacing="5">CYBER</text>
+</svg>
