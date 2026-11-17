@@ -2,19 +2,20 @@
    CYBER ARENA — Service Worker (PWA móvil)
    Precache local y fallback de navegación a index.html.
    ============================================================ */
-const CACHE = 'ciber-arena-pwa-v4';
+const CACHE = 'ciber-arena-pwa-v9';
+const CACHE_PREFIX = 'ciber-arena-pwa-';
 
 const ASSETS = [
-  './',
   './index.html',
   './manifest.json',
   './estilos.css',
   './script.js',
-  '../data/catalogo.js',
+  './shared/boot.js',
+  './data/catalogo.js',
   '../assets/icon.svg',
   '../assets/placeholder.svg',
-  '../../shared/base.css',
-  '../../shared/core.js'
+  './shared/base.css',
+  './shared/core.js'
 ];
 
 self.addEventListener('install', (event) => {
@@ -29,7 +30,7 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)))
+      Promise.all(keys.filter((key) => key !== CACHE && key.indexOf(CACHE_PREFIX) === 0).map((key) => caches.delete(key)))
     )
   );
   self.clients.claim();

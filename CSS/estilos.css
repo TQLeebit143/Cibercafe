@@ -57,6 +57,7 @@ body.ciber-site {
   background-size: auto, auto, 54px 54px, 54px 54px;
   background-attachment: fixed;
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 html[data-theme="light"] body.ciber-site {
@@ -681,3 +682,13 @@ html[data-theme="light"] .checkout-resumen { background: #f6fafd; }
 @media (prefers-reduced-motion: reduce) {
   .station.ocupada::after { animation: none; }
 }
+
+/* Accesibilidad táctil: objetivos de al menos 44 px en móvil y tablet. */
+@media (max-width: 900px) {
+  .btn, .btn-sm, .btn-xs { min-height: 44px; }
+  .btn-icon { width: 44px; height: 44px; min-height: 44px; }
+  .input, .select, .textarea { min-height: 44px; }
+  .chip { min-height: 44px; display: inline-flex; align-items: center; }
+  .dock-btn { min-height: 44px; }
+}
+

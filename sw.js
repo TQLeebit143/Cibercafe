@@ -1,20 +1,21 @@
-﻿/* ============================================================
+/* ============================================================
    CYBER ARENA — Service Worker (versión laptop)
    Cache-first para recursos locales + network-first en navegación.
    ============================================================ */
-const CACHE = 'ciber-arena-v2';
+const CACHE = 'ciber-arena-v7';
+const CACHE_PREFIX = 'ciber-arena-v';
 
 const ASSETS = [
-  './',
   './index.html',
   './manifest.json',
-  './estilos.css',
+  './CSS/estilos.css',
   './script.js',
+  './shared/boot.js',
   './data/catalogo.js',
   './assets/icon.svg',
   './assets/placeholder.svg',
-  '../../shared/base.css',
-  '../../shared/core.js'
+  './shared/base.css',
+  './shared/core.js'
 ];
 
 self.addEventListener('install', (event) => {
@@ -29,7 +30,7 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)))
+      Promise.all(keys.filter((key) => key !== CACHE && key.indexOf(CACHE_PREFIX) === 0).map((key) => caches.delete(key)))
     )
   );
   self.clients.claim();

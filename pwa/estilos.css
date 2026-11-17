@@ -661,3 +661,14 @@ html[data-theme="light"] .menu-card { box-shadow: 0 8px 18px rgba(11, 50, 70, .0
 @media (min-width: 480px) {
   .pwa-menu-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
 }
+
+/* Accesibilidad táctil: objetivos de al menos 44 px. */
+@media (max-width: 900px) {
+  .btn, .btn-sm, .btn-xs { min-height: 44px; }
+  .pwa-menu-btn, .pwa-cart-btn, .pwa-avatar { width: 44px; height: 44px; }
+  .pwa-theme-btn { width: 44px !important; height: 44px !important; min-height: 44px !important; }
+  .input, .select, .textarea { min-height: 44px; }
+  .chip { min-height: 44px; display: inline-flex; align-items: center; }
+  .pwa-dock-btn { min-height: 52px; }
+}
+
