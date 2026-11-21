@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cyber-arena-v4';
+const CACHE_NAME = 'cyber-arena-v5';
 const APP_SHELL = [
   './',
   './index.html',
