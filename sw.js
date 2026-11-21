@@ -1,52 +1,44 @@
-/* ============================================================
-   CYBER ARENA — Service Worker (versión laptop)
-   Cache-first para recursos locales + network-first en navegación.
-   ============================================================ */
-const CACHE = 'ciber-arena-v7';
-const CACHE_PREFIX = 'ciber-arena-v';
-
-const ASSETS = [
+const CACHE_NAME = 'cyber-arena-v4';
+const APP_SHELL = [
+  './',
   './index.html',
-  './manifest.json',
-  './CSS/estilos.css',
+  './estilos.css',
   './script.js',
-  './shared/boot.js',
-  './data/catalogo.js',
-  './assets/icon.svg',
-  './assets/placeholder.svg',
-  './shared/base.css',
-  './shared/core.js'
+  './data/catalogo.json',
+  './manifest.json'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE).then((cache) =>
-      Promise.allSettled(ASSETS.map((url) => cache.add(url).catch(() => null)))
-    )
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(APP_SHELL))
+      .then(() => self.skipWaiting())
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((key) => key !== CACHE && key.indexOf(CACHE_PREFIX) === 0).map((key) => caches.delete(key)))
-    )
+    caches.keys()
+      .then((keys) => Promise.all(
+        keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
+      ))
+      .then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
-  const request = event.request;
-  if (request.method !== 'GET') return;
+  if (event.request.method !== 'GET') return;
 
-  if (request.mode === 'navigate') {
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin) return;
+
+  if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(request)
-        .then((response) => {
-          const copy = response.clone();
-          caches.open(CACHE).then((cache) => cache.put(request, copy)).catch(() => {});
-          return response;
+      fetch(event.request)
+        .then((res) => {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then((c) => c.put('./index.html', copy));
+          return res;
         })
         .catch(() => caches.match('./index.html'))
     );
@@ -54,17 +46,18 @@ self.addEventListener('fetch', (event) => {
   }
 
   event.respondWith(
-    caches.match(request).then((cached) => {
-      if (cached) return cached;
-      return fetch(request)
-        .then((response) => {
-          if (response && response.status === 200 && new URL(request.url).origin === self.location.origin) {
-            const copy = response.clone();
-            caches.open(CACHE).then((cache) => cache.put(request, copy)).catch(() => {});
+    caches.match(event.request).then((cached) => {
+      const networkFetch = fetch(event.request)
+        .then((res) => {
+          if (res && res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE_NAME).then((c) => c.put(event.request, copy));
           }
-          return response;
+          return res;
         })
-        .catch(() => new Response('', { status: 408 }));
+        .catch(() => cached);
+
+      return cached || networkFetch;
     })
   );
 });

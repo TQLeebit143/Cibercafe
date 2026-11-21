@@ -1,47 +1,20 @@
 ﻿{
-  "name": "Cyber Arena — Gaming Lounge & Café",
+  "name": "CYBER ARENA · Gaming Lounge & Cafetería",
   "short_name": "Cyber Arena",
-  "description": "Reserva estaciones gamer, pide cafetería y controla tu cuenta en Cyber Arena.",
+  "description": "Sistema de reserva de cabinas PC RTX, consolas PS5/PS4/Wii, mesas co-working y cafetería al puesto.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "orientation": "landscape-primary",
+  "orientation": "any",
   "background_color": "#050508",
-  "theme_color": "#00f0ff",
-  "lang": "es",
-  "categories": ["games", "food", "entertainment"],
+  "theme_color": "#050508",
+  "lang": "es-BO",
   "icons": [
     {
-      "src": "assets/icon.svg",
+      "src": "./assets/logo.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
-      "src": "assets/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "maskable"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Reservar estación",
-      "short_name": "Reservas",
-      "description": "Elegir zona y estación gamer",
-      "url": "./index.html#vista-reservas"
-    },
-    {
-      "name": "Cafetería",
-      "short_name": "Menú",
-      "description": "Ver el menú gamer",
-      "url": "./index.html#vista-cafeteria"
-    },
-    {
-      "name": "Estado de cuenta",
-      "short_name": "Cuenta",
-      "description": "Consultar consumos y sesiones",
-      "url": "./index.html#vista-cuenta"
+      "purpose": "any maskable"
     }
   ]
 }

@@ -267,6 +267,71 @@
     });
   };
 
+  /* ── ESTADO DE RED (ONLINE / OFFLINE) ───────────────────── */
+  /* Indicador visual común. Se omite si la página ya trae su
+     propio aviso (por ejemplo el badge de la PWA de Heladería). */
+  App.initNetwork = function () {
+    if (document.querySelector('[data-network-status], #pwaOfflineBadge')) return;
+
+    var badge = document.createElement('div');
+    badge.className = 'app-net-badge';
+    badge.setAttribute('data-network-status', '');
+    badge.setAttribute('role', 'status');
+    badge.setAttribute('aria-live', 'polite');
+    document.body.appendChild(badge);
+
+    var style = document.createElement('style');
+    style.textContent = [
+      '.app-net-badge{position:fixed;left:14px;bottom:14px;z-index:2147482000;display:none;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;background:#15161c;color:#fff;font:800 12px/1 "Manrope",system-ui,sans-serif;letter-spacing:.3px;border:1px solid rgba(255,255,255,.16);box-shadow:0 10px 30px rgba(0,0,0,.35);}',
+      '.app-net-badge.is-visible{display:inline-flex;}',
+      '.app-net-badge::before{content:"";width:8px;height:8px;border-radius:50%;background:#ffb703;box-shadow:0 0 0 3px rgba(255,183,3,.18);}',
+      '@media (max-width:600px){.app-net-badge{left:10px;bottom:10px;font-size:11px;padding:8px 12px;}}'
+    ].join('');
+    document.head.appendChild(style);
+
+    var timer = 0;
+    function paint() {
+      var offline = !navigator.onLine;
+      badge.textContent = offline ? 'Modo offline activo' : 'Conexión restablecida';
+      badge.classList.add('is-visible');
+      window.clearTimeout(timer);
+      if (!offline) {
+        timer = window.setTimeout(function () { badge.classList.remove('is-visible'); }, 2600);
+      }
+    }
+
+    window.addEventListener('online', paint);
+    window.addEventListener('offline', paint);
+    if (!navigator.onLine) paint();
+  };
+
+  /* ── DATOS DESDE JSON (fetch) ───────────────────────────── */
+  /* Pide un catálogo en JSON y devuelve el arreglo, o null si
+     algo falla (sin servidor, archivo ausente, HTTP 404/500).
+     Se valida response.ok, como exige la rúbrica, y se usa
+     JSON.parse mediante response.json().
+
+     La página nunca se queda vacía: si devuelve null, sigue
+     mostrando los datos locales de data/catalogo.js. */
+  App.fetchCatalog = function (url) {
+    if (typeof window.fetch !== 'function') return Promise.resolve(null);
+
+    return window.fetch(url, { cache: 'no-cache' })
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error('HTTP ' + response.status + ' al pedir ' + url);
+        }
+        return response.json();
+      })
+      .then(function (data) {
+        return Array.isArray(data) && data.length ? data : null;
+      })
+      .catch(function (error) {
+        console.warn('[datos] No se pudo leer ' + url + ':', (error && error.message) || error);
+        return null;
+      });
+  };
+
   /* ── ARRANQUE ───────────────────────────────────────────── */
   App.ready = function (fn) {
     if (document.readyState === 'loading') {
@@ -280,6 +345,7 @@
     App.theme.init();
     App.initModals();
     App.initNav();
+    App.initNetwork();
   };
 
   App.ready(() => {
